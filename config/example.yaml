@@ -36,3 +36,5 @@ prover:
   url: ''
 mongodb:
   uri: ''
+settings:
+  debug: true
