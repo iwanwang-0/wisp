@@ -180,12 +180,16 @@ export class LightClientService {
 
     // 4. Wait for promises to resolve
     const promiseResults = await Promise.all([blsHeaderSignatureProofPromise, beaconStatePromise]);
+    this.logger.debug(`Requesting ZKP and getting beacon state all done`);
     lcUpdate.signature.proof = promiseResults[0];
     lcUpdate.signature.participation = participation;
 
     // 5. Broadcast header updates to all on-chain Light Client contracts
     if (shouldUpdateSyncCommittee) {
+      this.logger.debug("Should update sync committee");
+      this.logger.debug("Preparing sync committee update");
       const syncCommitteeUpdate = await this.prepareSyncCommitteeUpdate(promiseResults[1]);
+      this.logger.debug("Prepare sync committee update - done");
       lcUpdate.nextSyncCommitteeRoot = syncCommitteeUpdate.nextSyncCommitteeRoot;
       lcUpdate.nextSyncCommitteeBranch = syncCommitteeUpdate.nextSyncCommitteeRootBranch;
       const nextSyncCommitteePoseidon = syncCommitteeUpdate.syncCommitteePoseidon;

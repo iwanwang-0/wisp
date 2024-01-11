@@ -87,8 +87,12 @@ export class BeaconService {
    * @param slot
    */
   async getBeaconState(slot: number) {
+    this.logger.debug("Fetch beacon state start");
     const response = await fetch(`${this.baseUrl + BEACON_STATE_API}/${slot}`);
+    this.logger.debug("Fetch beacon state done");
     const beaconState = (await response.json())['data'];
-    return lodestar.ssz.capella.BeaconState.fromJson(beaconState);
+    const state = lodestar.ssz.capella.BeaconState.fromJson(beaconState);
+    this.logger.debug("getBeaconState - done");
+    return state;
   }
 }

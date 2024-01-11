@@ -64,6 +64,7 @@ export class LightClientContract {
   }
 
   async onUpdate(update: LightClientUpdate) {
+    this.logger.debug("On update header");
     if (this.head >= update.finalizedHeader.slot) {
       this.logger.debug(`Head update published, but slot is outdated. Skipping broadcast.`);
       return;
@@ -73,6 +74,7 @@ export class LightClientContract {
       return;
     }
     try {
+      this.logger.debug("Call `lightClient.update()`");
       const tx = await this.lightClient.update(update, { gasLimit: 800_000 });
       this.logger.log(`Submitted header update transaction. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot}`);
       tx.wait().catch(e => {
@@ -84,6 +86,7 @@ export class LightClientContract {
   }
 
   async onUpdateWithSyncCommittee(payload: { update: LightClientUpdate, nextSyncCommitteePoseidon: string, proof: Groth16Proof }) {
+    this.logger.debug("On update with sync committee");
     if (this.head >= payload.update.finalizedHeader.slot) {
       this.logger.debug(`Head and Sync Committee update published, but slot is outdated. Skipping broadcast.`);
       return;
@@ -94,6 +97,7 @@ export class LightClientContract {
     }
     const { update, nextSyncCommitteePoseidon, proof } = payload;
     try {
+      this.logger.debug("Call `lightClient.updateWithSyncCommittee()`");
       const tx = await this.lightClient.updateWithSyncCommittee(update, nextSyncCommitteePoseidon, proof);
       this.logger.log(`Submitted Header + Sync Committee update transaction. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot}`);
       tx.wait().catch(e => {

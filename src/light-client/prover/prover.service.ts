@@ -16,9 +16,11 @@ export class ProverService {
   private readonly proofEndpoint: string = "/api/v1/proof/generate";
   private readonly logger = new Logger(ProverService.name);
   private isZKPInProgress: boolean = false;
+  private readonly isDebug: boolean;
 
   constructor(private beaconService: BeaconService, private config: ConfigService) {
     this.baseUrl = this.config.get<string>("prover.url");
+    this.isDebug = this.config.get<boolean>("settings.debug");
   }
 
   /**
@@ -34,6 +36,12 @@ export class ProverService {
    * @param update
    */
   async computeBlsHeaderSignatureProof(update: altair.LightClientUpdate): Promise<Groth16Proof> {
+    // debug flag
+    if (this.isDebug) {
+      this.logger.debug("Requesting BLS ZKP debug mode - done");
+      return { a: [], b: [], c: [] };
+    }
+
     this.isZKPInProgress = true;
 
     // 1. Prepare the ZKP inputs
@@ -74,12 +82,21 @@ export class ProverService {
     });
     const proofInputs = { pubkeys, pubkeyHex, aggregatePubkeyHex };
 
-    const proof = await this.requestSyncCommitteeProof(proofInputs);
-    this.isZKPInProgress = false;
-    return {
-      proof: ProverService.parseProof(proof.proof),
-      syncCommitteePoseidon: ethers.utils.hexlify(ethers.BigNumber.from(proof["pub_signals"][32]))
-    };
+    // debug flag
+    if (!this.isDebug) {
+      const proof = await this.requestSyncCommitteeProof(proofInputs);
+      this.isZKPInProgress = false;
+      return {
+        proof: ProverService.parseProof(proof.proof),
+        syncCommitteePoseidon: ethers.utils.hexlify(ethers.BigNumber.from(proof["pub_signals"][32]))
+      };
+    } else {
+      this.isZKPInProgress = false;
+      return {
+        proof: { a: [], b: [], c: [] },
+        syncCommitteePoseidon: "0x210c51c58414c1befc439e1a142f96023545a5d215da4d40e98dfe180a113357"
+      }
+    }
   }
 
   private async requestSyncCommitteeProof(inputs: any) {
