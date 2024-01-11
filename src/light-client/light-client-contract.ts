@@ -82,6 +82,7 @@ export class LightClientContract {
       });
     } catch (e) {
       this.logger.error(`Transaction for header update will fail. slot=${update.finalizedHeader.slot} Error: ${e.error.reason}`);
+      console.log(e);
     }
   }
 
