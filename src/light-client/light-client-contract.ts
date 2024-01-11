@@ -81,7 +81,7 @@ export class LightClientContract {
         this.logger.error(`Failed to update header. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot} Error: ${e}`);
       });
     } catch (e) {
-      this.logger.error(`Transaction for header update will fail. slot=${update.finalizedHeader.slot} Error: ${e.error.reason}`);
+      // this.logger.error(`Transaction for header update will fail. slot=${update.finalizedHeader.slot} Error: ${e.error.reason}`);
       console.log(e);
     }
   }
