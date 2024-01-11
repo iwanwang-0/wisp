@@ -81,8 +81,7 @@ export class LightClientContract {
         this.logger.error(`Failed to update header. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot} Error: ${e}`);
       });
     } catch (e) {
-      // this.logger.error(`Transaction for header update will fail. slot=${update.finalizedHeader.slot} Error: ${e.error.reason}`);
-      console.log(e);
+      this.logger.error(`Transaction for header update will fail. slot=${update.finalizedHeader.slot} Error: ${e.error.reason}`);
     }
   }
 
@@ -105,7 +104,8 @@ export class LightClientContract {
         this.logger.error(`Failed to update Header + Sync Committee period. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot} } Error: ${e}`);
       });
     } catch (e) {
-      this.logger.error(`Transaction for Header + Sync Committee update will fail. Slot=${update.finalizedHeader.slot} }. Error: ${e.error.reason}`);
+      // this.logger.error(`Transaction for Header + Sync Committee update will fail. Slot=${update.finalizedHeader.slot} }. Error: ${e.error.reason}`);
+      console.log(e);
     }
   }
 
