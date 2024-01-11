@@ -39,7 +39,7 @@ export class ProverService {
     // debug flag
     if (this.isDebug) {
       this.logger.debug("Requesting BLS ZKP debug mode - done");
-      return { a: [], b: [], c: [] };
+      return { a: ['0','0'], b: [['0','0'], ['0','0']], c: ['0','0'] };
     }
 
     this.isZKPInProgress = true;
@@ -93,7 +93,7 @@ export class ProverService {
     } else {
       this.isZKPInProgress = false;
       return {
-        proof: { a: [], b: [], c: [] },
+        proof: { a: ['0','0'], b: [['0','0'], ['0','0']], c: ['0','0'] },
         syncCommitteePoseidon: "0x210c51c58414c1befc439e1a142f96023545a5d215da4d40e98dfe180a113357"
       }
     }
