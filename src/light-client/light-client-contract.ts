@@ -98,6 +98,7 @@ export class LightClientContract {
     const { update, nextSyncCommitteePoseidon, proof } = payload;
     try {
       this.logger.debug("Call `lightClient.updateWithSyncCommittee()`");
+      console.log(proof);
       const tx = await this.lightClient.updateWithSyncCommittee(update, nextSyncCommitteePoseidon, proof);
       this.logger.log(`Submitted Header + Sync Committee update transaction. Hash = ${tx.hash} slot = ${update.finalizedHeader.slot}`);
       tx.wait().catch(e => {
