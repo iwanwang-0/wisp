@@ -148,12 +148,14 @@ export class InboxContract {
     this.logger.debug("processMessage - 3");
     // Get state proof for the message within the outbox contract inside the source rollup
     const outboxProofData = await this.retryUntil(() => {
+      this.logger.debug("processMessage - 3.1");
         return extractoor.optimism.getProof(
           outboxAddress,
           messageStorageSlot,
           ethers.BigNumber.from(rollupStateProofData.blockNum).toHexString()
         );
       }, (result: EthereumProof) => {
+        this.logger.debug("processMessage - 3.2");
         return ethers.BigNumber.from(result.storageProof[0].value).toHexString() != message.hash;
       }
     );
