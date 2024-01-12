@@ -136,9 +136,16 @@ export class LightClientService {
     const finalizedExecutionBlock = finalizedBeaconBody.executionPayload.blockNumber;
 
     const shouldUpdateSyncCommittee = finalizedSlot >= this.nextPeriodUpdateAt;
+
+    this.logger.debug(`shouldUpdateSyncCommittee: ${shouldUpdateSyncCommittee}`);
+    this.logger.debug(`requestedBlockNumber: ${this.requestedBlockNumber}`);
+    this.logger.debug(`headBlockNumber: ${this.headBlockNumber}`);
+    this.logger.debug(`finalizedExecutionBlock: ${finalizedExecutionBlock}`);
+
     // Note: There is a possibility for chain A to have "outdated" head, but a message to already have been delivered in chain "B"
     // The current logic will request update even if no messages will make use of it
     const enablesMessageDelivery = this.requestedBlockNumber > this.headBlockNumber && this.requestedBlockNumber <= finalizedExecutionBlock;
+    this.logger.debug(`enablesMessageDelivery: ${enablesMessageDelivery}`);
 
     if (this.headSlot >= finalizedSlot) {
       this.logger.debug(`Skipping head update for slot=${finalizedSlot}. Newer finality slot already processed`);
