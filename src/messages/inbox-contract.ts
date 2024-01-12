@@ -199,6 +199,13 @@ export class InboxContract {
       slotPosition: messageStorageSlot,
       proofsBlob: inclusionProof
     };
+
+    this.logger.debug(`Contract params ==========>`);
+    this.logger.debug(`envelope: ${envelope}`);
+    this.logger.debug(`l1BlockNumber: ${ethers.BigNumber.from(rollupStateProofData.l1BlockNumber)}`);
+    this.logger.debug(`outputIndex: ${ethers.BigNumber.from(rollupStateProofData.outputIndex)}`);
+    this.logger.debug(`outputProof: ${outputProof}`);
+    this.logger.debug(`mptInclusionProof: ${mptInclusionProof}`);
     
     try {
       this.logger.debug("processMessage - 7");
