@@ -104,6 +104,7 @@ export class InboxContract {
   }
 
   private async processMessages(messages: MessageDTO[], blockNumber: number) {
+    this.logger.debug("processMessages - 1");
     // Group messages by source chain
     const messagesMap = messages.reduce((acc, msg) => {
       const messagesForChain = acc.get(msg.sourceChainId) || [];
@@ -111,14 +112,19 @@ export class InboxContract {
       acc.set(msg.sourceChainId, messagesForChain);
       return acc;
     }, new Map<number, MessageDTO[]>());
+    this.logger.debug("processMessages - 2");
     const messageGroupsPerChain = Array.from(messagesMap.entries());
+    this.logger.debug(`messageGroupsPerChain.length: ${messageGroupsPerChain.length}`);
     // Process messages per chain in parallel
     await Promise.all(messageGroupsPerChain.map(async ([chain, messages]) => {
       const extractoor = this.chain2Extractoor.get(chain);
+      this.logger.debug(`Start to generate latest output data, chain id: ${chain}`);
       const rollupStateProofData = await extractoor.generateLatestOutputData(ethers.utils.hexlify(blockNumber));
+      this.logger.debug(`Generate latest output data - done`);
       // Processing of messages for a given chain in parallel
       await Promise.all(messages.map(msg => this.processMessage.bind(this)(extractoor, rollupStateProofData, msg)));
     }));
+    this.logger.debug("processMessages - 3");
   }
 
   private async processStateRelayFee(messages: MessageDTO[], transactionCost: ethers.BigNumber) {
@@ -133,10 +139,13 @@ export class InboxContract {
    * @param message
    */
   async processMessage(extractoor: OptimismExtractoorClient, rollupStateProofData: OutputData, message: MessageDTO) {
+    this.logger.debug("processMessage - 1");
     // Compute storage slot of the message inside the outbox contract in `source` rollup
     const messageStorageSlot = ethers.utils.hexlify(this.MESSAGES_ARRAY_STORAGE_KEY.add(message.index));
+    this.logger.debug("processMessage - 2");
 
     const outboxAddress = this.chain2Outbox.get(message.sourceChainId);
+    this.logger.debug("processMessage - 3");
     // Get state proof for the message within the outbox contract inside the source rollup
     const outboxProofData = await this.retryUntil(() => {
         return extractoor.optimism.getProof(
@@ -148,6 +157,7 @@ export class InboxContract {
         return ethers.BigNumber.from(result.storageProof[0].value).toHexString() != message.hash;
       }
     );
+    this.logger.debug("processMessage - 4");
 
     // Prepare the calldata
     const inclusionProof = MPTProofsEncoder.rlpEncodeProofs(
@@ -155,11 +165,13 @@ export class InboxContract {
         outboxProofData.accountProof,
         outboxProofData.storageProof[0].proof
       ]);
+      this.logger.debug("processMessage - 5");
 
     const envelope = {
       message: CRCMessage.fromDTO(message),
       sender: message.sender
     };
+    this.logger.debug("processMessage - 6");
     const outputProof: OptimismOutputRootMIP = {
       outputRootProof: {
         stateRoot: rollupStateProofData.optimismStateRoot,
@@ -173,8 +185,9 @@ export class InboxContract {
       slotPosition: messageStorageSlot,
       proofsBlob: inclusionProof
     };
-
+    
     try {
+      this.logger.debug("processMessage - 7");
       const transaction = await this.inbox.receiveMessage(
         envelope,
         ethers.BigNumber.from(rollupStateProofData.l1BlockNumber),
