@@ -153,12 +153,14 @@ export class InboxContract {
         this.logger.debug(`messageStorageSlot: ${messageStorageSlot}`);
         this.logger.debug(`blockNum: ${rollupStateProofData.blockNum}`);
         let hexlifiedBlockNumber = ethers.BigNumber.from(rollupStateProofData.blockNum).toHexString();
+        hexlifiedBlockNumber = hexlifiedBlockNumber.slice(2); // remove `0x`
+        hexlifiedBlockNumber = hexlifiedBlockNumber.replace(/^0+/, ''); // remove leading zero digits
+        hexlifiedBlockNumber = `0x${hexlifiedBlockNumber}`; // add `0x`
+
         this.logger.debug(`blockNumber hex: ${
           hexlifiedBlockNumber
         }`);
-        if (hexlifiedBlockNumber == '0x012e275c') {
-          hexlifiedBlockNumber = '0x12e275c';
-        }
+        
         return extractoor.optimism.getProof(
           outboxAddress,
           messageStorageSlot,
