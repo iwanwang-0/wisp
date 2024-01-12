@@ -152,13 +152,17 @@ export class InboxContract {
         this.logger.debug(`outboxAddress: ${outboxAddress}`);
         this.logger.debug(`messageStorageSlot: ${messageStorageSlot}`);
         this.logger.debug(`blockNum: ${rollupStateProofData.blockNum}`);
+        let hexlifiedBlockNumber = ethers.BigNumber.from(rollupStateProofData.blockNum).toHexString();
         this.logger.debug(`blockNumber hex: ${
-          ethers.BigNumber.from(rollupStateProofData.blockNum).toHexString()
+          hexlifiedBlockNumber
         }`);
+        if (hexlifiedBlockNumber == '0x012e275c') {
+          hexlifiedBlockNumber = '0x12e275c';
+        }
         return extractoor.optimism.getProof(
           outboxAddress,
           messageStorageSlot,
-          ethers.BigNumber.from(rollupStateProofData.blockNum).toHexString()
+          hexlifiedBlockNumber
         );
       }, (result: EthereumProof) => {
         this.logger.debug("processMessage - 3.2");
