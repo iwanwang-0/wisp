@@ -206,7 +206,7 @@ export class InboxContract {
     this.logger.debug(`l1BlockNumber: ${ethers.BigNumber.from(rollupStateProofData.l1BlockNumber)}`);
     this.logger.debug(`outputIndex: ${ethers.BigNumber.from(rollupStateProofData.outputIndex)}`);
     this.logger.debug(`outputProof:`);
-    console.log(outputProof);
+    console.log(outputProof.toString());
     this.logger.debug(`mptInclusionProof:`);
     console.log(mptInclusionProof);
     
