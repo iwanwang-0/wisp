@@ -201,11 +201,14 @@ export class InboxContract {
     };
 
     this.logger.debug(`Contract params ==========>`);
-    this.logger.debug(`envelope: ${envelope}`);
+    this.logger.debug(`envelope:`);
+    console.log(envelope);
     this.logger.debug(`l1BlockNumber: ${ethers.BigNumber.from(rollupStateProofData.l1BlockNumber)}`);
     this.logger.debug(`outputIndex: ${ethers.BigNumber.from(rollupStateProofData.outputIndex)}`);
-    this.logger.debug(`outputProof: ${outputProof}`);
-    this.logger.debug(`mptInclusionProof: ${mptInclusionProof}`);
+    this.logger.debug(`outputProof:`);
+    console.log(outputProof);
+    this.logger.debug(`mptInclusionProof:`);
+    console.log(mptInclusionProof);
     
     try {
       this.logger.debug("processMessage - 7");
