@@ -200,15 +200,15 @@ export class InboxContract {
       proofsBlob: inclusionProof
     };
 
-    this.logger.debug(`Contract params ==========>`);
-    this.logger.debug(`envelope:`);
-    console.log(envelope);
-    this.logger.debug(`l1BlockNumber: ${ethers.BigNumber.from(rollupStateProofData.l1BlockNumber)}`);
-    this.logger.debug(`outputIndex: ${ethers.BigNumber.from(rollupStateProofData.outputIndex)}`);
-    this.logger.log(`outputProof:`);
-    console.log(JSON.stringify(outputProof));
-    this.logger.debug(`mptInclusionProof:`);
-    console.log(mptInclusionProof);
+    // this.logger.debug(`Contract params ==========>`);
+    // this.logger.debug(`envelope:`);
+    // console.log(envelope);
+    // this.logger.debug(`l1BlockNumber: ${ethers.BigNumber.from(rollupStateProofData.l1BlockNumber)}`);
+    // this.logger.debug(`outputIndex: ${ethers.BigNumber.from(rollupStateProofData.outputIndex)}`);
+    // this.logger.log(`outputProof:`);
+    // console.log(JSON.stringify(outputProof));
+    // this.logger.debug(`mptInclusionProof:`);
+    // console.log(mptInclusionProof);
     
     try {
       this.logger.debug("processMessage - 7");
