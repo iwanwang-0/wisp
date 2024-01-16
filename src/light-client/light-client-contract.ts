@@ -125,8 +125,7 @@ export class LightClientContract {
       slot: slot.toNumber(),
       blockNumber: blockNumber.toNumber(),
       executionRoot: executionRoot,
-      transactionCost: transaction.l1GasUsed.mul(transaction.l1GasPrice).mul(transaction.l1FeeScalar)
-        .add(transaction.effectiveGasPrice.mul(transaction.gasUsed))
+      transactionCost: n4
     } as Events.HeadUpdate);
 
     const updateDTO = new LightClientUpdateDTO(
