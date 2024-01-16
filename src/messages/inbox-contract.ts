@@ -240,9 +240,15 @@ export class InboxContract {
   async onMessageReceived(user: string, target: string, hash: string, eventData) {
     this.logger.log(`Message with hash [${hash}] has been processed`);
     const [block, transaction] = await Promise.all([eventData.getBlock(), eventData.getTransactionReceipt()]);
-    const txCost = transaction.l1GasUsed.mul(transaction.l1GasPrice).mul(transaction.l1FeeScalar)
-      .add(transaction.effectiveGasPrice.mul(transaction.gasUsed));
-    await this.persistence.updateDelivered(hash, eventData.transactionHash, block.timestamp, txCost.toString(), eventData.blockNumber);
+    // const txCost = transaction.l1GasUsed.mul(transaction.l1GasPrice).mul(transaction.l1FeeScalar)
+    //   .add(transaction.effectiveGasPrice.mul(transaction.gasUsed));
+    const n1: ethers.BigNumber = transaction.l1GasUsed.mul(transaction.l1GasPrice);
+    // avoid to be underflow, some times the `l1FeeScalar` is a float
+    const l1FeeScalar: ethers.BigNumber = ethers.BigNumber.from(transaction.l1FeeScalar * 1000000).div(1000000);
+    const n2: ethers.BigNumber = n1.mul(l1FeeScalar);
+    const n3: ethers.BigNumber = transaction.effectiveGasPrice.mul(transaction.gasUsed);
+    const n4: ethers.BigNumber = n2.add(n3);
+    await this.persistence.updateDelivered(hash, eventData.transactionHash, block.timestamp, n4.toString(), eventData.blockNumber);
   }
 
   /**
