@@ -59,10 +59,10 @@ export class InboxContract {
           OutputOracleL2OutputPosition: 3
       };
       this.logger.debug(`Extractor - ${n.name}: `);
-      this.logger.debug(`\n RPC: ${n.rpcUrl}`);
-      this.logger.debug(`\n L1RPC: ${l1RpcUrl}`);
-      this.logger.debug(`\n L1OutputContract: ${extractoorNetwork.OutputOracleAddress}`);
-      this.logger.debug(`\n L2WithdrawContract: ${extractoorNetwork.L2WithdrawalContractAddress}`);
+      this.logger.debug(`\t RPC: ${n.rpcUrl}`);
+      this.logger.debug(`\t L1RPC: ${l1RpcUrl}`);
+      this.logger.debug(`\t L1OutputContract: ${extractoorNetwork.OutputOracleAddress}`);
+      this.logger.debug(`\t L2WithdrawContract: ${extractoorNetwork.L2WithdrawalContractAddress}`);
 
       const extractoor = new OptimismExtractoorClient(n.rpcUrl, l1RpcUrl, extractoorNetwork);
       this.chain2Extractoor.set(n.chainId, extractoor);

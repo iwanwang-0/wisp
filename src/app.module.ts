@@ -4,6 +4,7 @@ import { LightClientModule } from "./light-client/light-client.module";
 import { MessagesModule } from "./messages/messages.module";
 import { PersistenceModule } from "./persistence/persistence.module";
 import { ConfigModule } from "@nestjs/config";
+import { ScheduleModule } from '@nestjs/schedule';
 import configuration from "./configuration";
 
 @Module({
@@ -14,7 +15,8 @@ import configuration from "./configuration";
     }),
     LightClientModule,
     MessagesModule,
-    PersistenceModule
+    PersistenceModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [],
   providers: [AppService]

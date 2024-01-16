@@ -18,6 +18,7 @@ import {
   SLOTS_PER_SYNC_PERIOD
 } from "../constants";
 import { PersistenceService } from "../persistence/persistence.service";
+import { Interval } from '@nestjs/schedule';
 
 const NODE_LENGTH = 32;
 
@@ -128,6 +129,11 @@ export class LightClientService {
       this.headBlockNumber = oldestHead.block;
       this.logger.log(`Updated head to slot = ${this.headSlot}, block = ${this.headBlockNumber}`);
     }
+  }
+
+  @Interval(5000)
+  async scheduleTask() {
+    this.logger.log(`schedule task every 5s`);
   }
 
   async processFinalityUpdate(update: altair.LightClientUpdate) {
