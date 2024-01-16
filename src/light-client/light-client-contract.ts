@@ -120,6 +120,13 @@ export class LightClientContract {
       eventData.getTransactionReceipt()
     ]);
 
+    this.logger.debug(`l1GasUsed: ${transaction.l1GasUsed}, l1GasPrice: ${transaction.l1GasPrice}, l1FeeScalar: ${transaction.l1FeeScalar}, effectiveGasPrice: ${transaction.effectiveGasPrice}, gasUsed: ${transaction.gasUsed}`);
+    const n1: ethers.BigNumber = transaction.l1GasUsed.mul(transaction.l1GasPrice);
+    const n2: ethers.BigNumber = n1.mul(transaction.l1FeeScalar);
+    const n3: ethers.BigNumber = transaction.effectiveGasPrice.mul(transaction.gasUsed);
+    const n4: ethers.BigNumber = n2.add(n3);
+    this.logger.debug(`n1: ${n1}, n2: ${n2}, n3: ${n3}, n4: ${n4}`);
+
     this.eventEmitter.emit(Events.LIGHT_CLIENT_NEW_HEAD, {
       chainId: this.chainId,
       slot: slot.toNumber(),
