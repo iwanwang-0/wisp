@@ -131,9 +131,17 @@ export class LightClientService {
     }
   }
 
-  @Interval(5000)
+  @Interval(300000)
   async scheduleTask() {
-    this.logger.log(`schedule task every 5s`);
+    try {
+      const fetchResult = await fetch(`https://lodestar-sepolia.chainsafe.io/eth/v1/beacon/light_client/finality_update`);
+      const data = (await fetchResult.json()).data;
+      const finalityUpdate = lodestar.ssz.altair.LightClientFinalityUpdate.fromJson(data);
+      this.logger.debug(`Received new finality update for slot = ${finalityUpdate.finalizedHeader.beacon.slot}`);
+      this.logger.log(`schedule task every 5 minutes`);
+    } catch (error) {
+      this.logger.error(`schedule error: ${error}`);
+    }
   }
 
   async processFinalityUpdate(update: altair.LightClientUpdate) {
