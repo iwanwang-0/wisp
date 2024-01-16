@@ -22,6 +22,7 @@ export type NetworkConfig = {
   outgoing: {
     supported: boolean
     l1RollupContract: string
+    l2WithdrawalContract: string
     outboxContract: string
     lightClientContract: string
   }

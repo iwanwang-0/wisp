@@ -10,7 +10,8 @@ import {
   MPTProofsEncoder,
   OPTIMISM_GOERLI_CONFIG,
   OptimismExtractoorClient,
-  OutputData
+  OutputData,
+  OptimismNetworkConfig
 } from "extractoor";
 import { CRCMessage, OptimismMessageMIP, OptimismOutputRootMIP } from "../models";
 import { Utils } from "../utils";
@@ -52,7 +53,18 @@ export class InboxContract {
     // Creates extractoor per source chain (excluding current chain)
     // Important! Supports only Optimism based networks
     networks.filter(network => network.chainId != this.chainId).forEach(n => {
-      const extractoor = new OptimismExtractoorClient(n.rpcUrl, l1RpcUrl, EXTRACTOOR_CONFIG[n.name]);
+      const extractoorNetwork: OptimismNetworkConfig = {
+          L2WithdrawalContractAddress: n.outgoing.l2WithdrawalContract,
+          OutputOracleAddress: n.outgoing.l1RollupContract,
+          OutputOracleL2OutputPosition: 3
+      };
+      this.logger.debug(`Extractor - ${n.name}: `);
+      this.logger.debug(`\n RPC: ${n.rpcUrl}`);
+      this.logger.debug(`\n L1RPC: ${l1RpcUrl}`);
+      this.logger.debug(`\n L1OutputContract: ${extractoorNetwork.OutputOracleAddress}`);
+      this.logger.debug(`\n L2WithdrawContract: ${extractoorNetwork.L2WithdrawalContractAddress}`);
+
+      const extractoor = new OptimismExtractoorClient(n.rpcUrl, l1RpcUrl, extractoorNetwork);
       this.chain2Extractoor.set(n.chainId, extractoor);
       this.chain2Outbox.set(n.chainId, n.outgoing.outboxContract);
       this.chain2Name.set(n.chainId, n.name);

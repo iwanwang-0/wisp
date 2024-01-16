@@ -18,6 +18,7 @@ networks:
       outgoing:
         supported: true
         l1RollupContract: '0xE6Dfba0953616Bacab0c9A8ecb3a9BBa77FC15c0'
+        l2WithdrawalContract: '0x4200000000000000000000000000000000000016'
         outboxContract: '0xb6f147a87ce210648e341569b61a132e02990653'
         lightClientContract: '0x0399d42ba805465a5118b1d8037c9a3db1b0df83'
     - name: 'Base'
@@ -30,6 +31,7 @@ networks:
       outgoing:
         supported: true
         l1RollupContract: '0x2A35891ff30313CcFa6CE88dcf3858bb075A2298'
+        l2WithdrawalContract: '0x4200000000000000000000000000000000000016'
         outboxContract: '0xf904d6c85bacd4d0f4c3c60f170d5052111d5c54'
         lightClientContract: '0x7106281bea5124b3dab4181d029eb982b3c43cfa'
 prover:
